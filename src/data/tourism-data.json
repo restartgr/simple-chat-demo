@@ -11,7 +11,7 @@
           "description": "从两国河中心（River Center）出发，\"东京双塔水上巴士夜间巡航\"将带您欣赏隅田川和东京湾的璀璨夜景！夜幕降临，灯光开启，坐在船中，您将游览东京晴空塔、东京塔，还有东京湾、彩虹桥与潮人聚集地丰州，隅田川上众多桥梁的照明倒映在水面，为您的周末夜晚增添色彩。享受90分钟的巡航，带您欣赏全新东京夜景！",
           "price": 2800,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-RHT5G",
-          "tags": ["CRUISES", "NIGHT_VIEW"],
+          "tags": ["游船", "夜景"],
           "duration": "90分钟",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/tokyomizubeline/RHT5G_bf17ec09-bf04-4cfb-aa40-98ef1343c81d.jpg",
           "recommendation": "夜晚巡游东京湾，欣赏双塔夜景的绝佳体验"
@@ -22,13 +22,7 @@
           "description": "超值套票包含可尽情展望东京风景的东京晴空塔®展望台门票与让您可轻松游览东京的Tokyo Subway Ticket 24小时车票（一日乘车通票），最高可省下1,000日圆！Tokyo Subway Ticket为可于24小时内无限搭乘东京METRO全线与都营地下铁线全线电车的超值车票。",
           "price": 2650,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-3PWVV",
-          "tags": [
-            "RAILWAY_TICKET",
-            "ATTRACTION",
-            "TOWER_BUILDING",
-            "BUNDLE",
-            "PASS"
-          ],
+          "tags": ["交通票券", "景点", "高塔建筑", "套票", "通票"],
           "duration": "1天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/3PWVV_91c0ea16-66e4-4c1b-8481-761f9289a434.jpeg",
           "recommendation": "超值套票，包含晴空塔门票和地铁24小时通票"
@@ -39,7 +33,7 @@
           "description": "通过预订羽田机场私人接送服务，您无需担心在抵达新城市时找不到最后一刻的车。司机会提前追踪您的航班并与您会面。此外，您还可以在舒适的空调车内一路前往东京市内的目的地。全程高速，7座埃尔法，无需任何追加费用。",
           "price": 11700,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-2IV2I",
-          "tags": ["AIRPORT_TRANSPORTATION", "CHARTER"],
+          "tags": ["机场交通", "包车"],
           "duration": "单次服务",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/linktaxi/2IV2I_4c7bd724-b4df-4ff0-bd83-dcb3b6e9c3da.png",
           "recommendation": "便捷的羽田机场私人接送服务，7座埃尔法豪华体验"
@@ -50,7 +44,7 @@
           "description": "提供连接东京都心与东京临海地区的东京BRT全线一日乘车券。您可于使用当日至东京BRT末班车前无限畅乘。停靠站包括：虎之门之丘、新桥、胜doki BRT、丰洲市场前、有明网球之森、国际展示场、东京电讯站、晴海中央等。",
           "price": 500,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-KC7AW",
-          "tags": ["RAILWAY_TICKET", "PASS"],
+          "tags": ["交通票券", "通票"],
           "duration": "1天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/tokyo-brt/AHCNE_daf401f8-2012-49fd-9091-2fb27e0e6e28.jpg",
           "recommendation": "经济实惠的东京BRT一日券，连接都心与临海地区"
@@ -61,7 +55,7 @@
           "description": "包含东京晴空塔展望台入场券、东京迷你世界博物馆 SMALL WORLDS门票的超值套票。订购时请选择参观东京晴空塔®展望台的日期、时间。",
           "price": 4750,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-T41YZ",
-          "tags": ["ATTRACTION", "TOWER_BUILDING", "BUNDLE"],
+          "tags": ["景点", "高塔建筑", "套票"],
           "duration": "半天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/T41YZ_0ffa0c02-4c34-4330-8852-c666547a6ade.jpeg",
           "recommendation": "晴空塔与迷你世界博物馆的完美组合"
@@ -72,7 +66,7 @@
           "description": "杜莎夫人蜡像馆源自英国伦敦，拥有长达约250年的悠久历史，为游客们带来充满趣味的体验型展览。东京杜莎夫人蜡像馆位于台场地区，馆内展示了70座以上非常逼真的真人比例蜡像，其中不仅有Lady Gaga、莱昂纳多等世界级巨星，还有日本天团X JAPAN、超人气偶像AKB48、知名演员菅田将晖等各界名人的蜡像。",
           "price": 2100,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-45P56",
-          "tags": ["MUSEUM_GALLERY", "ATTRACTION"],
+          "tags": ["博物馆", "景点"],
           "duration": "2-3小时",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/merlin/45P56_83c608a4-1cc0-4936-9dff-4c71df75bdea.jpg",
           "recommendation": "与世界名人蜡像亲密合影的绝佳体验"
@@ -83,13 +77,7 @@
           "description": "超值套票包含可尽情展望东京风景的东京晴空塔展望台门票、可搭乘京急电车往返羽田机场～泉岳寺站之间的京急羽得车票、与Tokyo Subway Ticket 东京地铁24小时乘车券（东京METRO＆都营地下铁线一日乘车通票）。",
           "price": 3250,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-JLPXK",
-          "tags": [
-            "RAILWAY_TICKET",
-            "ATTRACTION",
-            "TOWER_BUILDING",
-            "BUNDLE",
-            "PASS"
-          ],
+          "tags": ["交通票券", "景点", "高塔建筑", "套票", "通票"],
           "duration": "1天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/JLPXK_e8efad8d-7550-4193-9cf4-b250d7845e8a.jpeg",
           "recommendation": "包含机场交通、地铁和晴空塔的全套解决方案"
@@ -100,13 +88,7 @@
           "description": "超值套票包含可尽情展望东京风景的东京晴空塔展望台门票、可搭乘京急电车往返羽田机场～泉岳寺站之间的京急羽得车票、与Tokyo Subway Ticket 东京地铁48小时乘车券（东京METRO＆都营地下铁线一日乘车通票）。",
           "price": 3650,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-LDQ8O",
-          "tags": [
-            "RAILWAY_TICKET",
-            "ATTRACTION",
-            "TOWER_BUILDING",
-            "BUNDLE",
-            "PASS"
-          ],
+          "tags": ["交通票券", "景点", "高塔建筑", "套票", "通票"],
           "duration": "2天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/JLPXK_e8efad8d-7550-4193-9cf4-b250d7845e8a.jpeg",
           "recommendation": "48小时地铁通票版本，适合长期游览"
@@ -117,7 +99,7 @@
           "description": "本套票包含东京BRT 一日乘车券、与由东京都交通局、东京地下铁株式会联合发售的Tokyo Subway Ticket 24小时车票（一日乘车券），持该车票将可于24小时内无限搭乘都营地下铁线全线与东京METRO全线的电车，让您尽情游览东京。",
           "price": 1300,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-JJ6WB",
-          "tags": ["RAILWAY_TICKET", "PASS", "BUNDLE"],
+          "tags": ["交通票券", "通票", "套票"],
           "duration": "1天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/JJ6WB_624a7542-0b56-4033-8bb3-fe5ea36b7967.jpg",
           "recommendation": "BRT和地铁组合票，东京交通全覆盖"
@@ -128,7 +110,7 @@
           "description": "从东京站或秋叶原站直达富士五湖之一的河口湖，提供舒适便捷的直达巴士服务。沿途无需换乘，可欣赏富士山美景，悠闲享受旅程的开始。透过事先预约可确保座位，即使在观光旺季也能安心游玩。",
           "price": 3200,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-IMZJ4",
-          "tags": ["EXPRESS_BUS", "TRANSPORTATION"],
+          "tags": ["高速巴士", "交通"],
           "duration": "单程",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/busde/IMZJ4_d4795841-389c-4e70-922e-8516f1da9c5b.png",
           "recommendation": "前往河口湖的便捷直达巴士，欣赏富士山美景"
@@ -139,7 +121,7 @@
           "description": "箱根是日本屈指可数的温泉乡，保存着未经人工开发的丰富大自然，而且离东京非常近。箱根周游券是一种优惠车票，覆盖了箱根所有人气观光景点。箱根周游券包含了小田急线的往返车票和可在指定地区内自由上下车的车票，还能以折扣价参观这一带的各种游乐设施。",
           "price": 6000,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-Odakyu_Hakone_Freepass2023",
-          "tags": ["RAILWAY_TICKET", "CRUISES", "PASS"],
+          "tags": ["交通票券", "游船", "通票"],
           "duration": "2-3天",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/Odakyu_Hakone_Freepass2023_1.png",
           "recommendation": "探索箱根温泉乡的最佳选择，包含多种交通工具"
@@ -150,7 +132,7 @@
           "description": "于2024年8月在新宿开业的娱乐设施，为将日本传统文化以无对白方式带来的新次元舞台表演。表演由参与过日本忍者理事会及2020年东京奥运开幕式等盛大活动、于日本国内外展出多场歌舞伎演出的田中传次郎先生总指导监督下，由一流的演员带你进入全新的世界观中。",
           "price": 5600,
           "bookingUrl": "https://www.triplabo.jp/activity/zh/LINKTIVITY-FLU0S",
-          "tags": ["SHOW", "CULTURE"],
+          "tags": ["表演", "文化"],
           "duration": "1小时20分钟",
           "thumbnailUrl": "https://content.linktivity.io/supplier-link/LINKTIVITY/FLU0S_performance.jpg",
           "recommendation": "体验日本传统文化的现代演绎，无对白舞台表演"

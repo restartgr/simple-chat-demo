@@ -1,0 +1,33 @@
+{
+  "destinations": [
+    {
+      "id": "ExampleCity",
+      "name": "示例城市",
+      "description": "这是一个示例城市的描述",
+      "attractions": [
+        {
+          "id": "EXAMPLE-ID-001",
+          "name": "示例景点名称",
+          "description": "这是一个示例景点的详细描述，您可以在这里写入具体的景点信息。",
+          "price": 1000,
+          "bookingUrl": "https://example.com/booking/example-attraction",
+          "tags": ["ATTRACTION", "EXAMPLE"],
+          "duration": "2小时",
+          "thumbnailUrl": "https://example.com/images/example-thumbnail.jpg",
+          "recommendation": "这里是推荐理由的示例文本"
+        },
+        {
+          "id": "EXAMPLE-ID-002",
+          "name": "另一个示例景点",
+          "description": "另一个示例景点的详细描述。您可以添加多个景点。",
+          "price": 2500,
+          "bookingUrl": "https://example.com/booking/another-attraction",
+          "tags": ["SHOW", "CULTURE", "EXAMPLE"],
+          "duration": "半天",
+          "thumbnailUrl": "https://example.com/images/another-thumbnail.jpg",
+          "recommendation": "另一个推荐理由的示例"
+        }
+      ]
+    }
+  ]
+}

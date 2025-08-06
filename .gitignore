@@ -20,6 +20,9 @@ dist-ssr
 .env.production.local
 .env.*.local
 
+# Data files
+src/data/tourism-data.json
+
 # Security & Credentials
 *.key
 *.pem
