@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@ant-design/x": "^1.6.0",
     "@langchain/community": "^0.3.49",
     "antd": "^5.26.7",
     "axios": "^1.11.0",
