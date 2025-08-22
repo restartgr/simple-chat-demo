@@ -39,7 +39,7 @@
 ### 开发工具
 - **代码质量**: ESLint + Prettier + Husky + lint-staged
 - **类型检查**: TypeScript 严格模式
-- **包管理**: npm/pnpm
+- **包管理**: pnpm
 
 ## 🚀 快速开始
 
@@ -53,8 +53,6 @@ cd personal-chat-demo
 ### 2. 安装依赖
 
 ```bash
-npm install
-# 或
 pnpm install
 ```
 
@@ -78,15 +76,15 @@ VITE_APP_DESCRIPTION=基于AI的智能东京旅游推荐系统
 ### 4. 启动开发服务器
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-应用将在 `http://localhost:5173` 启动
+应用将在 `http://localhost:3300` 启动
 
 ### 5. 构建生产版本
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ## 🎨 设计亮点
@@ -218,19 +216,19 @@ src/
 
 ```bash
 # 开发
-npm run dev          # 启动开发服务器
-npm run start        # 启动开发服务器（别名）
+pnpm dev              # 启动开发服务器
+pnpm start            # 启动开发服务器（别名）
 
 # 构建
-npm run build        # 构建生产版本
-npm run preview      # 预览生产版本
+pnpm build            # 构建生产版本
+pnpm preview          # 预览生产版本
 
 # 代码质量
-npm run lint         # ESLint检查并修复
-npm run format       # Prettier格式化代码
+pnpm lint             # ESLint检查并修复
+pnpm format           # Prettier格式化代码
 
 # Git hooks
-npm run prepare      # 安装Husky hooks
+pnpm prepare          # 安装Husky hooks
 ```
 
 ## 🌟 设计系统
