@@ -33,7 +33,7 @@ class TravelRecommendationService {
         tags: attraction.tags,
         duration: attraction.duration,
         recommendation: attraction.recommendation,
-        thumbnailUrl: attraction.thumbnailUrl
+        thumbnailUrl: attraction.thumbnailUrl,
       }))
     );
   }
@@ -106,7 +106,7 @@ class TravelRecommendationService {
     return {
       products: recommendedProducts,
       totalProducts: filteredProducts.length,
-      message
+      message,
     };
   }
 
@@ -126,7 +126,7 @@ class TravelRecommendationService {
       博物馆: ['MUSEUM_GALLERY'],
       表演: ['SHOW'],
       套票: ['BUNDLE'],
-      一日券: ['PASS']
+      一日券: ['PASS'],
     };
 
     // 检查关键词

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
@@ -37,9 +35,13 @@ class ZhipuAIService {
     }
 
     try {
-      const response = await axios.post<ZhipuAIResponse>(
-        this.baseURL,
-        {
+      const response = await fetch(this.baseURL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           model: 'glm-4.5-air',
           messages: messages,
           temperature: 0.7,
@@ -47,19 +49,18 @@ class ZhipuAIService {
           stream: false,
           enable_search: false,
           do_sample: true,
-          tools: []
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+          tools: [],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: ZhipuAIResponse = await response.json();
 
       return (
-        response.data.choices[0]?.message?.content ||
-        '抱歉，我现在无法回答您的问题。'
+        data.choices[0]?.message?.content || '抱歉，我现在无法回答您的问题。'
       );
     } catch (error) {
       console.error('智谱AI调用失败:', error);
@@ -85,7 +86,7 @@ class ZhipuAIService {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           model: 'glm-4.5-air',
@@ -95,8 +96,8 @@ class ZhipuAIService {
           stream: true,
           enable_search: false,
           do_sample: true,
-          tools: []
-        })
+          tools: [],
+        }),
       });
 
       if (!response.ok) {
@@ -134,7 +135,6 @@ class ZhipuAIService {
 
             try {
               const parsed = JSON.parse(data);
-              console.log('流式数据:', parsed); // 调试日志
 
               const delta = parsed.choices?.[0]?.delta;
               if (delta) {
@@ -142,14 +142,8 @@ class ZhipuAIService {
                 const content = delta.content || '';
 
                 if (content) {
-                  console.log('接收到内容:', content); // 调试日志
                   fullContent += content;
                   onChunk(content);
-                }
-
-                // 如果只有reasoning_content，说明模型在思考，不输出给用户
-                if (delta.reasoning_content && !delta.content) {
-                  console.log('模型思考中...', delta.reasoning_content);
                 }
               }
             } catch (parseError) {

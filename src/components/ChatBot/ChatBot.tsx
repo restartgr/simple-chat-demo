@@ -1,34 +1,16 @@
-import React, { useState, useRef } from 'react';
-import {
-  Card,
-  Button,
-  Input,
-  Space,
-  Typography,
-  Row,
-  Col,
-  Avatar,
-  Divider,
-  Spin,
-  message as antdMessage
-} from 'antd';
-import {
-  SendOutlined,
-  UserOutlined,
-  RobotOutlined,
-  ClockCircleOutlined,
-  TagOutlined,
-  LinkOutlined
-} from '@ant-design/icons';
+import React, { useState, useRef, useCallback } from 'react';
+import { Send, User, Bot, Clock, Tag, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import 'github-markdown-css/github-markdown-light.css';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+
 import ZhipuAIService from '../../services/zhipuai';
 import travelService, { type TravelProduct } from '../../services/tourism';
-import styles from './chatbot.module.css';
-
-const { Title, Text, Paragraph } = Typography;
-const { TextArea } = Input;
 
 // 混合内容渲染组件（markdown + 产品卡片）
 const MixedContentRenderer: React.FC<{
@@ -39,47 +21,25 @@ const MixedContentRenderer: React.FC<{
   const parts = content.split(/(<!-- PRODUCT_PLACEHOLDER:[A-Za-z0-9-_]+ -->)/g);
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       {parts.map((part, index) => {
         // 检查是否是产品占位符
         const productMatch = part.match(
           /<!-- PRODUCT_PLACEHOLDER:([A-Za-z0-9-_]+) -->/
         );
-
         if (productMatch) {
-          // 找到对应的产品并渲染产品卡片
           const productId = productMatch[1];
           const product = allProducts.find(p => p.id === productId);
-
-          // console.log(`尝试匹配产品 ID: ${productId}`);
-          // console.log(`找到的产品:`, product);
 
           if (product) {
             return <ProductCard key={`product-${index}`} product={product} />;
           }
-          // 如果没找到产品，显示一个错误提示
-          return (
-            <div
-              key={`error-${index}`}
-              style={{
-                padding: '8px',
-                margin: '8px 0',
-                backgroundColor: '#fff2f0',
-                border: '1px solid #ffccc7',
-                borderRadius: '4px',
-                color: '#ff4d4f'
-              }}
-            >
-              未找到产品: {productId}
-            </div>
-          );
+          // 如果没找到产品，不显示错误提示，直接跳过
+          return null;
         } else {
           // 渲染markdown内容
           return part.trim() ? (
-            <div
-              key={`markdown-${index}`}
-              className={`markdown-body ${styles.markdownContent}`}
-            >
+            <div key={`markdown-${index}`} className="markdown-content">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -92,7 +52,7 @@ const MixedContentRenderer: React.FC<{
                     >
                       {children} 🔗
                     </a>
-                  )
+                  ),
                 }}
               >
                 {part}
@@ -101,59 +61,73 @@ const MixedContentRenderer: React.FC<{
           ) : null;
         }
       })}
-    </>
+    </div>
   );
 };
 
-// 旅游产品卡片组件
+// 产品卡片组件
 const ProductCard: React.FC<{ product: TravelProduct }> = ({ product }) => (
-  <div className={styles.attractionCardCustom}>
-    <img
-      src={product.thumbnailUrl}
-      alt={product.name}
-      className={styles.attractionImage}
-      onError={e => {
-        (e.target as HTMLImageElement).src =
-          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDE2MCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik04MCA2MEw2NCA0NEg5Nkw4MCA2MFoiIGZpbGw9IiNEOUQ5RDkiLz4KPGNpcmNsZSBjeD0iNzAiIGN5PSI0NSIgcj0iNSIgZmlsbD0iI0Q5RDlEOSIvPgo8L3N2Zz4K';
-      }}
-    />
-    <div className={styles.attractionContent}>
-      <div className={styles.attractionTitle}>{product.name}</div>
-      <div className={styles.attractionDescription}>{product.description}</div>
-
-      <div className={styles.attractionMeta}>
-        <div className={styles.attractionMetaItem}>
-          <ClockCircleOutlined className="icon" />
-          {product.duration}
+  <Card className="hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-300 bg-white">
+    <CardContent className="p-5">
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex-shrink-0">
+          <img
+            src={product.thumbnailUrl}
+            alt={product.name}
+            className="w-full sm:w-36 h-28 object-cover rounded-xl shadow-sm"
+            onError={e => {
+              e.currentTarget.src =
+                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjExMiIgdmlld0JveD0iMCAwIDE0NCAxMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNDQiIGhlaWdodD0iMTEyIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik03MiA1NkwzNiA0MEgxMDhMNzIgNTZaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjU2IiBjeT0iNDAiIHI9IjQiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+';
+            }}
+          />
         </div>
-        <div className={styles.attractionMetaItem}>
-          <TagOutlined className="icon" />
-          {product.tags.join('、')}
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="flex items-start justify-between">
+            <h4 className="font-semibold text-lg text-blue-600 line-clamp-1">
+              {product.name}
+            </h4>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-red-500">
+                ¥{product.price}
+              </div>
+              <div className="text-xs text-gray-500">起</div>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+            {product.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {product.tags?.slice(0, 3).map((tag, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-blue-50 text-blue-600 border border-blue-200"
+              >
+                <Tag className="w-3 h-3 mr-1" />
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center text-xs text-gray-500">
+              <Clock className="w-4 h-4 mr-1" />
+              {product.duration}
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 text-blue-600 border-blue-200 hover:bg-blue-50"
+            >
+              <ExternalLink className="w-3 h-3 mr-1" />
+              查看详情
+            </Button>
+          </div>
         </div>
       </div>
-
-      <div className={styles.attractionRecommendation}>
-        💡 {product.recommendation}
-      </div>
-
-      <div className={styles.attractionActions}>
-        <div className={styles.attractionPrice}>
-          <span className="currency">¥</span>
-          {product.price}
-        </div>
-        {product.bookingUrl && (
-          <Button
-            type="primary"
-            size="small"
-            icon={<LinkOutlined />}
-            onClick={() => window.open(product.bookingUrl, '_blank')}
-          >
-            立即预订
-          </Button>
-        )}
-      </div>
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 );
 
 interface ChatItem {
@@ -161,100 +135,128 @@ interface ChatItem {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  products?: TravelProduct[];
+  allProducts?: TravelProduct[];
   hasRecommendations?: boolean;
   isStreaming?: boolean;
 }
+
+// 欢迎屏幕组件 - 模仿图片设计
+const WelcomeScreen: React.FC<{ onExampleClick: (text: string) => void }> = ({
+  onExampleClick,
+}) => {
+  const quickActions = [
+    { icon: '🗼', label: '东京旅游', value: '我想去东京旅游，预算50000日元' },
+    { icon: '🏯', label: '晴空塔', value: '推荐东京晴空塔的门票' },
+    { icon: '🚊', label: '交通券', value: '东京地铁交通券推荐' },
+    { icon: '🌃', label: '夜景巡航', value: '东京夜景巡航体验' },
+    { icon: '🎭', label: '文化体验', value: '东京传统文化表演体验' },
+    { icon: '🚗', label: '接送服务', value: '东京机场接送服务' },
+  ];
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full px-8 py-12 text-center gap-8">
+      {/* 机器人头像 */}
+      <div>
+        <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+          <Bot className="w-10 h-10 text-white" />
+        </div>
+      </div>
+
+      {/* 欢迎文案 */}
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
+          👋 欢迎使用东京旅游推荐助手！
+        </h1>
+        <p className="text-gray-600 max-w-lg leading-relaxed">
+          我是基于公司旅游产品数据集的专业推荐机器人，为您推荐最合适的东京旅游产品
+        </p>
+      </div>
+
+      {/* 功能介绍 */}
+      <div className="flex flex-col gap-4">
+        <h3 className="text-lg font-semibold text-gray-800">
+          我可以为您推荐：
+        </h3>
+        <div className="grid grid-cols-2 gap-x-16 gap-y-4 text-sm text-gray-700">
+          <div className="flex items-center gap-2">🗼 东京晴空塔套票</div>
+          <div className="flex items-center gap-2">🚊 地铁交通券</div>
+          <div className="flex items-center gap-2">🌃 夜景巡航体验</div>
+          <div className="flex items-center gap-2">🎭 传统文化表演</div>
+          <div className="flex items-center gap-2">🚗 机场接送服务</div>
+          <div className="flex items-center gap-2">🎨 博物馆门票</div>
+        </div>
+      </div>
+
+      {/* 快速开始 */}
+      <div className="w-full max-w-2xl flex flex-col gap-4">
+        <h3 className="text-lg font-semibold text-gray-800 flex items-center justify-center gap-2">
+          ✨ 快速开始
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {quickActions.map((action, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              className="h-12 px-4 text-sm border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all"
+              onClick={() => onExampleClick(action.value)}
+            >
+              <span className="mr-2">{action.icon}</span>
+              {action.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ChatBot: React.FC = () => {
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const zhipuAI = useRef(new ZhipuAIService());
-  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // 解析用户消息中的预算
-  const parseUserBudget = (message: string): number | undefined => {
+  const parseUserBudget = useCallback((message: string): number | undefined => {
     const budgetMatch = message.match(/(\d+)元|(\d+)块|预算.*?(\d+)/);
     if (budgetMatch) {
       return parseInt(budgetMatch[1] || budgetMatch[2] || budgetMatch[3]);
     }
     return undefined;
-  };
+  }, []);
 
   // 使用AI判断是否是旅游相关查询
-  const isTravelRelatedQuery = async (
-    userInput: string
-  ): Promise<{
-    isTravel: boolean;
-    isServerError: boolean;
-    errorMessage?: string;
-  }> => {
-    try {
-      const response = await zhipuAI.current.chatCompletion([
-        {
-          role: 'user',
-          content: `please judge whether the following sentence is about Japan tourism: ${userInput}, only answer "yes" or "no"`
-        }
-      ]);
-      return {
-        isTravel: response.includes('yes'),
-        isServerError: false
-      };
-    } catch (error: unknown) {
-      console.error('AI判断错误:', error);
-
-      // 检查是否是API错误响应
-      const errorObj = error as { error?: { code?: string; message?: string } };
-      if (errorObj?.error?.code || errorObj?.error?.message) {
-        const errorCode = errorObj.error.code;
-        const errorMessage = errorObj.error.message;
-
-        // 根据错误码返回具体的错误信息
-        if (errorCode === '1302') {
-          return {
-            isTravel: false,
-            isServerError: true,
-            errorMessage: '服务器繁忙，请稍后重试'
-          };
-        } else if (errorCode === '1301' || errorCode === '1003') {
-          return {
-            isTravel: false,
-            isServerError: true,
-            errorMessage: 'API密钥无效，请联系管理员'
-          };
-        } else {
-          return {
-            isTravel: false,
-            isServerError: true,
-            errorMessage: `服务异常：${errorMessage || '请稍后重试'}`
-          };
-        }
-      }
-
-      // 网络错误或其他未知错误
-      const networkErrorObj = error as { message?: string; code?: string };
-      if (
-        networkErrorObj?.message?.includes('fetch') ||
-        networkErrorObj?.code === 'NETWORK_ERROR'
-      ) {
+  const isTravelRelatedQuery = useCallback(
+    async (
+      userInput: string
+    ): Promise<{
+      isTravel: boolean;
+      isServerError: boolean;
+      errorMessage?: string;
+    }> => {
+      try {
+        const response = await zhipuAI.current.chatCompletion([
+          {
+            role: 'user',
+            content: `please judge whether the following sentence is about Japan tourism: ${userInput}, only answer "yes" or "no"`,
+          },
+        ]);
         return {
-          isTravel: false,
-          isServerError: true,
-          errorMessage: '网络连接失败，请稍后重试'
+          isTravel: response.includes('yes'),
+          isServerError: false,
+        };
+      } catch (error: unknown) {
+        console.error('AI判断错误:', error);
+        return {
+          isTravel: true, // 默认认为是旅游相关
+          isServerError: false,
         };
       }
-
-      // 其他未知错误，默认认为是旅游查询
-      return {
-        isTravel: true,
-        isServerError: false
-      };
-    }
-  };
-
-  // 发送消息
-  const handleSendMessage = async () => {
+    },
+    []
+  );
+  // 处理发送消息
+  const handleSendMessage = useCallback(async () => {
     if (!inputValue.trim() || loading) return;
 
     const userMessage = inputValue.trim();
@@ -266,7 +268,7 @@ const ChatBot: React.FC = () => {
       id: Date.now().toString(),
       role: 'user',
       content: userMessage,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     setChatItems(prev => [...prev, userChatItem]);
@@ -282,7 +284,7 @@ const ChatBot: React.FC = () => {
           role: 'assistant',
           content: `❌ ${travelQueryResult.errorMessage}`,
           timestamp: new Date(),
-          hasRecommendations: false
+          hasRecommendations: false,
         };
         setChatItems(prev => [...prev, errorResponse]);
         return;
@@ -296,7 +298,7 @@ const ChatBot: React.FC = () => {
           content:
             '很抱歉，我只能推荐东京的旅游产品，请提供东京旅游相关的问题哦~',
           timestamp: new Date(),
-          hasRecommendations: false
+          hasRecommendations: false,
         };
         setChatItems(prev => [...prev, nonTravelResponse]);
         return;
@@ -404,20 +406,7 @@ Please start your recommendations:`;
 
       // 创建初始的AI回复项（用于流式更新）
       const aiChatItemId = `${Date.now()}-ai`;
-      const initialAiChatItem: ChatItem = {
-        id: aiChatItemId,
-        role: 'assistant',
-        content: '',
-        timestamp: new Date(),
-        products: allProducts,
-        hasRecommendations: false,
-        isStreaming: true
-      };
-
-      setChatItems(prev => [...prev, initialAiChatItem]);
-
-      // 开始流式传输后立即设置loading为false（因为已经有流式状态了）
-      setLoading(false);
+      let hasAddedChatItem = false; // 标记是否已添加聊天项
 
       // 使用流式传输获取AI回复
       let fullResponse = '';
@@ -426,13 +415,12 @@ Please start your recommendations:`;
         [
           {
             role: 'user',
-            content: systemPrompt
-          }
+            content: systemPrompt,
+          },
         ],
         // onChunk: 每次接收到新内容时的回调
         (chunk: string) => {
           fullResponse += chunk;
-
           // 智能处理产品标记：只替换完整的产品标记，避免部分匹配
           let processedContent = fullResponse;
 
@@ -473,18 +461,38 @@ Please start your recommendations:`;
             console.log('流式传输进度:', fullResponse.length, '字符');
           }
 
-          // 实时更新聊天项
-          setChatItems(prev =>
-            prev.map(item =>
-              item.id === aiChatItemId
-                ? {
-                    ...item,
-                    content: processedContent,
-                    isStreaming: true
-                  }
-                : item
-            )
-          );
+          // 检查是否有实际内容（非空且不只是空白字符）
+          const hasContent = processedContent.trim().length > 0;
+
+          // 只有当有实际内容且尚未添加聊天项时，才添加聊天项并关闭loading
+          if (hasContent && !hasAddedChatItem) {
+            const initialAiChatItem: ChatItem = {
+              id: aiChatItemId,
+              role: 'assistant',
+              content: processedContent,
+              timestamp: new Date(),
+              allProducts: allProducts,
+              hasRecommendations: false,
+              isStreaming: true,
+            };
+
+            setChatItems(prev => [...prev, initialAiChatItem]);
+            setLoading(false);
+            hasAddedChatItem = true;
+          } else if (hasContent && hasAddedChatItem) {
+            // 如果已经添加了聊天项，只更新内容
+            setChatItems(prev =>
+              prev.map(item =>
+                item.id === aiChatItemId
+                  ? {
+                      ...item,
+                      content: processedContent,
+                      isStreaming: true,
+                    }
+                  : item
+              )
+            );
+          }
         },
         // onComplete: 流式传输完成时的回调
         (finalContent: string) => {
@@ -507,23 +515,37 @@ Please start your recommendations:`;
             '<!-- PRODUCT_PLACEHOLDER:$1 -->'
           );
 
-          // console.log('AI原始回复:', finalContent);
-          // console.log('提取的产品ID:', recommendedProductIds);
-          // console.log('处理后的内容:', finalProcessedContent);
+          // 确保在完成时loading状态被关闭
+          setLoading(false);
 
-          // 更新为最终状态
-          setChatItems(prev =>
-            prev.map(item =>
-              item.id === aiChatItemId
-                ? {
-                    ...item,
-                    content: finalProcessedContent,
-                    hasRecommendations: recommendedProductIds.length > 0,
-                    isStreaming: false
-                  }
-                : item
-            )
-          );
+          // 如果还没有添加聊天项（内容为空的情况），添加一个空内容的项
+          if (!hasAddedChatItem) {
+            const finalAiChatItem: ChatItem = {
+              id: aiChatItemId,
+              role: 'assistant',
+              content:
+                finalProcessedContent || '抱歉，我没有生成任何回复内容。',
+              timestamp: new Date(),
+              allProducts: allProducts,
+              hasRecommendations: recommendedProductIds.length > 0,
+              isStreaming: false,
+            };
+            setChatItems(prev => [...prev, finalAiChatItem]);
+          } else {
+            // 更新为最终状态
+            setChatItems(prev =>
+              prev.map(item =>
+                item.id === aiChatItemId
+                  ? {
+                      ...item,
+                      content: finalProcessedContent,
+                      hasRecommendations: recommendedProductIds.length > 0,
+                      isStreaming: false,
+                    }
+                  : item
+              )
+            );
+          }
         }
       );
     } catch (error) {
@@ -536,289 +558,160 @@ Please start your recommendations:`;
         id: `${Date.now()}-error`,
         role: 'assistant',
         content: '抱歉，我现在无法处理您的请求，请稍后再试。',
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-
       setChatItems(prev => [...prev, errorChatItem]);
-      antdMessage.error('服务暂时不可用，请稍后重试');
     } finally {
       setLoading(false);
     }
-  };
+  }, [inputValue, loading, isTravelRelatedQuery, parseUserBudget]);
 
-  // 快速示例按钮
-  const QuickExamples: React.FC = () => (
-    <div className={styles.quickExamples}>
-      <Text
-        strong
-        style={{ display: 'block', marginBottom: 16, textAlign: 'center' }}
-      >
-        ✨ 快速开始
-      </Text>
-      <Space wrap style={{ justifyContent: 'center', width: '100%' }}>
-        <Button
-          type="primary"
-          ghost
-          onClick={() => {
-            setInputValue('我想去东京旅游，预算30000日元');
-            setTimeout(handleSendMessage, 100);
-          }}
-        >
-          🗼 东京旅游
-        </Button>
-        <Button
-          onClick={() => {
-            setInputValue('推荐东京晴空塔的门票');
-            setTimeout(handleSendMessage, 100);
-          }}
-        >
-          🗼 晴空塔
-        </Button>
-        <Button
-          onClick={() => {
-            setInputValue('想要东京地铁交通券');
-            setTimeout(handleSendMessage, 100);
-          }}
-        >
-          🚊 交通券
-        </Button>
-        <Button
-          onClick={() => {
-            setInputValue('东京夜景巡航推荐');
-            setTimeout(handleSendMessage, 100);
-          }}
-        >
-          🌃 夜景巡航
-        </Button>
-        <Button
-          onClick={() => {
-            setInputValue('东京传统文化表演体验');
-            setTimeout(handleSendMessage, 100);
-          }}
-        >
-          🎭 文化体验
-        </Button>
-        <Button
-          onClick={() => {
-            setInputValue('东京机场接送服务');
-            setTimeout(handleSendMessage, 100);
-          }}
-        >
-          🚗 接送服务
-        </Button>
-      </Space>
-    </div>
-  );
-
-  // 欢迎界面
-  const WelcomeScreen: React.FC = () => (
-    <div className={styles.welcomeScreen}>
-      <div className={styles.welcomeContent}>
-        <Avatar
-          size={64}
-          icon={<RobotOutlined />}
-          style={{ backgroundColor: '#1890ff', marginBottom: 16 }}
-        />
-        <Title level={3} style={{ color: '#1890ff', marginBottom: 8 }}>
-          👋 欢迎使用东京旅游推荐助手！
-        </Title>
-        <Paragraph
-          style={{ marginBottom: 24, color: '#666', fontSize: '16px' }}
-        >
-          我是基于公司旅游产品数据集的专业推荐机器人，为您推荐最合适的东京旅游产品
-        </Paragraph>
-
-        <Card
-          size="small"
-          style={{ marginBottom: 24, backgroundColor: '#f9f9f9' }}
-        >
-          <Text strong style={{ display: 'block', marginBottom: 12 }}>
-            我可以为您推荐：
-          </Text>
-          <Row gutter={[16, 8]}>
-            <Col span={12}>🗼 东京晴空塔套票</Col>
-            <Col span={12}>🚊 地铁交通券</Col>
-            <Col span={12}>🌃 夜景巡航体验</Col>
-            <Col span={12}>🎭 传统文化表演</Col>
-            <Col span={12}>🚗 机场接送服务</Col>
-            <Col span={12}>🎨 博物馆门票</Col>
-          </Row>
-        </Card>
-
-        <QuickExamples />
-      </div>
-    </div>
-  );
+  // 处理示例点击
+  const handleExampleClick = useCallback((text: string) => {
+    setInputValue(text);
+  }, []);
 
   return (
-    <div className={styles.chatbotContainer}>
-      <Card
-        title={
-          <div style={{ textAlign: 'center' }}>
-            <RobotOutlined
-              style={{ fontSize: '24px', color: '#1890ff', marginRight: 8 }}
-            />
-            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-blue-500 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl">
+        <Card className="h-[90vh] flex flex-col shadow-2xl bg-white rounded-2xl overflow-hidden">
+          {/* 头部 */}
+          <CardHeader className="bg-white border-b border-gray-100 px-6 py-4 shrink-0">
+            <CardTitle className="flex items-center justify-center text-xl text-blue-600">
+              <Bot className="w-6 h-6 mr-3" />
               东京旅游推荐助手
-            </span>
-          </div>
-        }
-        className={styles.chatbotCard}
-        bodyStyle={{
-          padding: 0,
-          height: 'calc(80vh - 60px)',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        {/* 聊天区域 */}
-        <div ref={chatContainerRef} className={styles.chatContainer}>
-          {chatItems.length === 0 ? (
-            <WelcomeScreen />
-          ) : (
-            chatItems.map(item => (
-              <div
-                key={item.id}
-                className={`${styles.messageItem} ${item.role === 'user' ? styles.userMessage : styles.assistantMessage}`}
-              >
-                <div className={styles.messageContent}>
-                  {item.role === 'assistant' && (
-                    <Avatar
-                      icon={<RobotOutlined />}
-                      style={{ backgroundColor: '#1890ff', marginRight: 12 }}
-                      size="small"
-                    />
-                  )}
+            </CardTitle>
+          </CardHeader>
 
-                  <div className={styles.messageBody}>
-                    <Card
-                      size="small"
-                      className={
-                        item.role === 'user'
-                          ? styles.userBubble
-                          : styles.assistantBubble
-                      }
-                      bodyStyle={{ padding: '12px 16px' }}
-                    >
-                      {item.role === 'user' ? (
-                        <div
-                          style={{
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word'
-                          }}
-                        >
-                          {item.content}
-                        </div>
-                      ) : (
-                        <>
-                          <MixedContentRenderer
-                            content={item.content}
-                            allProducts={item.products || []}
-                          />
-                          {/* 流式传输指示器 */}
-                          {item.isStreaming && (
-                            <div
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                marginTop: '8px',
-                                color: '#1890ff'
-                              }}
-                            >
-                              <div
-                                style={{
-                                  width: '6px',
-                                  height: '6px',
-                                  backgroundColor: '#1890ff',
-                                  borderRadius: '50%',
-                                  marginRight: '4px',
-                                  animation: 'pulse 1.5s infinite'
-                                }}
-                              />
-                              正在输出中...
-                            </div>
-                          )}
-                        </>
+          {/* 聊天内容区 */}
+          <CardContent className="flex-1 overflow-hidden p-0 flex flex-col">
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              {chatItems.length === 0 ? (
+                <WelcomeScreen onExampleClick={handleExampleClick} />
+              ) : (
+                <div className="p-6 flex flex-col gap-6">
+                  {chatItems.map(item => (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        'flex gap-4 message-animate',
+                        item.role === 'user' ? 'justify-end' : 'justify-start'
                       )}
-                    </Card>
-
-                    <Text
-                      type="secondary"
-                      style={{
-                        fontSize: '12px',
-                        marginTop: 4,
-                        display: 'block'
-                      }}
                     >
-                      {item.timestamp.toLocaleTimeString()}
-                    </Text>
-                  </div>
+                      {item.role === 'assistant' && (
+                        <Avatar className="w-10 h-10 bg-blue-500 flex-shrink-0 shadow-lg">
+                          <AvatarFallback className="text-white bg-transparent">
+                            <Bot className="w-5 h-5" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
 
-                  {item.role === 'user' && (
-                    <Avatar
-                      icon={<UserOutlined />}
-                      style={{ backgroundColor: '#52c41a', marginLeft: 12 }}
-                      size="small"
-                    />
+                      <div
+                        className={cn(
+                          'max-w-[75%] min-w-[120px]',
+                          item.role === 'user' ? 'order-1' : 'order-2'
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            'rounded-2xl shadow-lg border p-4',
+                            item.role === 'user'
+                              ? 'bg-blue-500 text-white border-blue-300 ml-auto'
+                              : 'bg-white border-gray-200'
+                          )}
+                        >
+                          {item.role === 'user' ? (
+                            <p className="text-sm leading-relaxed">
+                              {item.content}
+                            </p>
+                          ) : (
+                            <MixedContentRenderer
+                              content={item.content}
+                              allProducts={item.allProducts || []}
+                            />
+                          )}
+                        </div>
+
+                        <div
+                          className={cn(
+                            'flex items-center gap-2 mt-2 text-xs text-gray-500',
+                            item.role === 'user'
+                              ? 'justify-end'
+                              : 'justify-start'
+                          )}
+                        >
+                          <Clock className="w-3 h-3" />
+                          <span>{item.timestamp.toLocaleTimeString()}</span>
+                        </div>
+                      </div>
+
+                      {item.role === 'user' && (
+                        <Avatar className="w-10 h-10 bg-gray-500 flex-shrink-0 shadow-lg">
+                          <AvatarFallback className="text-white bg-transparent">
+                            <User className="w-5 h-5" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
+                  ))}
+
+                  {loading && (
+                    <div className="flex gap-4 justify-start message-animate">
+                      <Avatar className="w-10 h-10 bg-blue-500 flex-shrink-0 shadow-lg">
+                        <AvatarFallback className="text-white bg-transparent">
+                          <Bot className="w-5 h-5" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-4">
+                        <div className="flex items-center gap-3 text-gray-500">
+                          <div className="flex space-x-1">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                            <div
+                              className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                              style={{ animationDelay: '0.1s' }}
+                            ></div>
+                            <div
+                              className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                              style={{ animationDelay: '0.2s' }}
+                            ></div>
+                          </div>
+                          <span className="text-sm">AI 正在思考中...</span>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
-              </div>
-            ))
-          )}
+              )}
+            </div>
 
-          {loading && !chatItems.some(item => item.isStreaming) && (
-            <div className={`${styles.messageItem} ${styles.assistantMessage}`}>
-              <div className={styles.messageContent}>
-                <Avatar
-                  icon={<RobotOutlined />}
-                  style={{ backgroundColor: '#1890ff', marginRight: 12 }}
-                  size="small"
+            {/* 输入区域 */}
+            <div className="border-t border-gray-100 bg-white p-4 shrink-0">
+              <div className="flex gap-3 items-stretch">
+                <Input
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  placeholder="告诉我您的旅游需求..."
+                  className="flex-1 h-12 px-4 py-3 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg shadow-sm"
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
                 />
-                <Card
-                  size="small"
-                  className={styles.assistantBubble}
-                  bodyStyle={{ padding: '12px 16px' }}
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim() || loading}
+                  className="h-12 px-6 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg shadow-sm font-medium transition-colors"
                 >
-                  <Space>
-                    <Spin size="small" />
-                    <Text>正在分析您的需求...</Text>
-                  </Space>
-                </Card>
+                  <Send className="w-4 h-4 mr-2" />
+                  发送
+                </Button>
               </div>
             </div>
-          )}
-        </div>
-
-        {/* 输入区域 */}
-        <div className={styles.inputArea}>
-          <Divider style={{ margin: 0 }} />
-          <div style={{ padding: '16px', display: 'flex', gap: 8 }}>
-            <TextArea
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              placeholder="告诉我您的旅游需求..."
-              autoSize={{ minRows: 1, maxRows: 3 }}
-              onPressEnter={e => {
-                if (!e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-              style={{ flex: 1 }}
-            />
-            <Button
-              type="primary"
-              icon={<SendOutlined />}
-              onClick={handleSendMessage}
-              loading={loading}
-              disabled={!inputValue.trim()}
-              size="large"
-            >
-              发送
-            </Button>
-          </div>
-        </div>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

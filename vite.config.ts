@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 
@@ -8,22 +9,23 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       host: true,
-      port: 3300
+      port: 3300,
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src')
-      }
+        '@': resolve(__dirname, './src'),
+      },
     },
     plugins: [
       react({
         babel: {
           plugins: [
-            ['@babel/plugin-proposal-decorators', { version: '2023-05' }]
-          ]
-        }
+            ['@babel/plugin-proposal-decorators', { version: '2023-05' }],
+          ],
+        },
       }),
-      svgr()
+      tailwindcss(),
+      svgr(),
     ],
     build: {
       sourcemap: mode === 'production' ? 'hidden' : true,
@@ -31,10 +33,10 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            'vendor-react': ['react', 'react-dom', 'react-router']
-          }
-        }
-      }
-    }
+            'vendor-react': ['react', 'react-dom', 'react-router'],
+          },
+        },
+      },
+    },
   };
 });
