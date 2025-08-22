@@ -1,5 +1,5 @@
 export default {
   common: {
-    account: 'Account'
-  }
+    account: 'Account',
+  },
 };

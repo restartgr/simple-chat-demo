@@ -1,5 +1,5 @@
 export default {
   common: {
-    account: '계정'
-  }
+    account: '계정',
+  },
 };

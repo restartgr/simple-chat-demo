@@ -3,11 +3,13 @@
 ## 旅游数据配置
 
 ### 文件说明
+
 - `tourism-data.example.json` - 数据结构示例文件
 
 ### 如何配置
 
 1. 新建 `tourism-data.json` 文件，参考示例文件的数据结构：
+
    ```bash
    touch tourism-data.json
    ```
@@ -21,7 +23,7 @@
   "destinations": [
     {
       "id": "城市ID",
-      "name": "城市名称", 
+      "name": "城市名称",
       "description": "城市描述",
       "attractions": [
         {
@@ -41,8 +43,8 @@
 }
 ```
 
-
 ### 注意事项
+
 - 所有 ID 必须唯一
 - 价格使用数字类型
 - URL 需要是有效的链接格式

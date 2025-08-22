@@ -1,5 +1,5 @@
 export default {
   common: {
-    account: '帐户'
-  }
+    account: '帐户',
+  },
 };

@@ -4,12 +4,11 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  useRouteError
+  useRouteError,
 } from 'react-router';
 import { BaseLayout } from '@/layouts';
 
 const Home = lazy(() => import('@/views/Home'));
-const NotFound = lazy(() => import('@/views/NotFound'));
 
 function RootErrorBoundary() {
   const error = useRouteError() as Error;
@@ -28,7 +27,6 @@ const router = createBrowserRouter(
     <Route errorElement={<RootErrorBoundary />}>
       <Route path="/" element={<BaseLayout />}>
         <Route index element={lazyView(<Home />)} />
-        <Route path="*" element={lazyView(<NotFound />)} />
       </Route>
     </Route>
   )

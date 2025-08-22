@@ -1,10 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router';
-import styles from './base.module.css';
 
 const BaseLayout: React.FC = () => {
   return (
-    <div className={styles.base}>
+    <div className="h-full w-full">
       <Outlet />
     </div>
   );

@@ -16,35 +16,35 @@ declare module 'i18next' {
 export const resources = {
   en: {
     translation: {
-      ...enText
-    }
+      ...enText,
+    },
   },
   ja: {
     translation: {
-      ...jaText
-    }
+      ...jaText,
+    },
   },
   ko: {
     translation: {
-      ...koText
-    }
+      ...koText,
+    },
   },
   zh: {
     translation: {
-      ...zhText
-    }
+      ...zhText,
+    },
   },
   zt: {
     translation: {
-      ...ztText
-    }
-  }
+      ...ztText,
+    },
+  },
 } as const;
 
 void i18n.use(initReactI18next).init({
   lng: DEFAULT_LOCALE,
   returnNull: false,
-  resources
+  resources,
 });
 
 export function setLocale(locale: string): string {
